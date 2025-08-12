@@ -1,6 +1,9 @@
+"use client";
+
 import { Testimonial } from "@/types/testimonial";
 import SectionTitle from "../Common/SectionTitle";
 import SingleTestimonial from "./SingleTestimonial";
+import { motion } from "framer-motion";
 
 const testimonialData: Testimonial[] = [
   {
@@ -33,18 +36,49 @@ const testimonialData: Testimonial[] = [
 ];
 
 const Testimonials = () => {
+  const variants = {
+    hidden: (direction: string) => ({
+      x: direction === "left" ? -100 : 100,
+      opacity: 0,
+    }),
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: {
+        duration: 0.3,
+      },
+    },
+  };
+
   return (
-    <section className="dark:bg-bg-color-dark bg-gray-light relative z-10 py-16 md:py-20 lg:py-28">
+    <section className="relative z-10 bg-gray-light dark:bg-bg-color-dark py-16 md:py-20 lg:py-28">
       <div className="container">
         <SectionTitle
-          title="What Our Users Says"
+          title="What Our Users Say"
           paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
           center
         />
 
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
-          {testimonialData.map((testimonial) => (
-            <SingleTestimonial key={testimonial.id} testimonial={testimonial} />
+          {testimonialData.map((testimonial, index) => (
+            <motion.div
+              key={testimonial.id}
+              custom={index % 2 === 0 ? "left" : "right"}
+              variants={variants}
+              initial="hidden"
+              whileInView="visible"
+              exit="exit"
+              viewport={{ amount: 0.3 }}
+              className="w-full"
+            >
+              <SingleTestimonial testimonial={testimonial} />
+            </motion.div>
           ))}
         </div>
       </div>
